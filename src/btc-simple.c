@@ -87,7 +87,6 @@ static void window_load(Window *window) {
   text_layer_set_text_color(time_layer, GColorWhite);
   layer_add_child(root_layer, text_layer_get_layer(time_layer));
 
-
   // Create the Date text_layer
   date_layer = text_layer_create(GRect(0, 56, 144, 56));
   text_layer_set_text_alignment(date_layer, GTextAlignmentCenter);
