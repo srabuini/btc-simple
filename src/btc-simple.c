@@ -6,9 +6,6 @@ static TextLayer *date_layer;
 static TextLayer *btc_layer;
 static Layer *rounded_layer;
 
-static InverterLayer *inverter_time;
-static InverterLayer *inverter_date_layer;
-
 static AppSync sync;
 static uint8_t sync_buffer[64];
 
@@ -66,6 +63,7 @@ static void rounded_layer_update_callback(Layer *me, GContext *ctx) {
 }
 
 static void window_load(Window *window) {
+  window_set_background_color(window, GColorBlack);
   Layer *root_layer = window_get_root_layer(window);
 
   // Create the Time text_layer
@@ -73,21 +71,19 @@ static void window_load(Window *window) {
   text_layer_set_text_alignment(time_layer, GTextAlignmentCenter);
   text_layer_set_font(time_layer,
                       fonts_get_system_font(FONT_KEY_ROBOTO_BOLD_SUBSET_49));
+  text_layer_set_background_color(time_layer, GColorBlack);
+  text_layer_set_text_color(time_layer, GColorWhite);
   layer_add_child(root_layer, text_layer_get_layer(time_layer));
 
-  inverter_time = inverter_layer_create(GRect(0, 0, 144, 56));
-  layer_add_child(root_layer, inverter_layer_get_layer(inverter_time));
 
   // Create the Date text_layer
   date_layer = text_layer_create(GRect(0, 56, 144, 56));
   text_layer_set_text_alignment(date_layer, GTextAlignmentCenter);
   text_layer_set_font(date_layer,
                       fonts_get_system_font(FONT_KEY_GOTHIC_24 ));
+  text_layer_set_background_color(date_layer, GColorBlack);
+  text_layer_set_text_color(date_layer, GColorWhite);
   layer_add_child(root_layer, text_layer_get_layer(date_layer));
-
-  inverter_date_layer = inverter_layer_create(GRect(0, 56, 144, 56));
-  layer_add_child(root_layer,
-                  inverter_layer_get_layer(inverter_date_layer));
 
   Layer *window_layer = root_layer;
   GRect frame = layer_get_frame(window_layer);
@@ -135,14 +131,12 @@ static void window_unload(Window *window) {
 
   // Destroy the text layer
   text_layer_destroy(time_layer);
-  inverter_layer_destroy(inverter_time);
 
   // Destroy the btc_layer
   text_layer_destroy(btc_layer);
 
   // Destroy the date_layer
   text_layer_destroy(date_layer);
-  inverter_layer_destroy(inverter_date_layer);
 }
 
 static void init(void) {
