@@ -92,7 +92,7 @@ static void window_load(Window *window) {
   date_layer = text_layer_create(GRect(0, 56, 144, 56));
   text_layer_set_text_alignment(date_layer, GTextAlignmentCenter);
   text_layer_set_font(date_layer,
-                      fonts_get_system_font(FONT_KEY_GOTHIC_24 ));
+                      fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
   text_layer_set_background_color(date_layer, GColorBlack);
   text_layer_set_text_color(date_layer, GColorWhite);
   layer_add_child(root_layer, text_layer_get_layer(date_layer));
