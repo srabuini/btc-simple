@@ -1,17 +1,28 @@
 {
-  "uuid": "cea47b89-6378-47ca-b9f4-c3bb9de3286e",
-  "shortName": "btc-simple",
-  "longName": "Bitstamp BTC Price",
-  "companyName": "WasabitLabs",
-  "versionCode": 1,
-  "versionLabel": "1.0",
-  "watchapp": {
-    "watchface": false
-  },
-  "appKeys": {
-    "price": 0
-  },
-  "resources": {
-    "media": []
-  }
+    "appKeys": {
+        "price": 0
+    },
+    "capabilities": [
+        ""
+    ],
+    "companyName": "WasabitLabs",
+    "longName": "Bitstamp BTC Price",
+    "projectType": "native",
+    "resources": {
+        "media": [
+            {
+                "file": "images/btc-simple-menu.png",
+                "menuIcon": true,
+                "name": "IMAGE_MENU",
+                "type": "png"
+            }
+        ]
+    },
+    "shortName": "btc-simple",
+    "uuid": "cea47b89-6378-47ca-b9f4-c3bb9de3286e",
+    "versionCode": 1,
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": false
+    }
 }
