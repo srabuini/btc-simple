@@ -56,6 +56,16 @@ static void send_cmd(void) {
   app_message_outbox_send();
 }
 
+static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
+  // refresh
+  text_layer_set_text(btc_layer, "Loading...");
+  send_cmd();
+}
+
+static void click_config_provider(void *context) {
+  window_single_click_subscribe(BUTTON_ID_SELECT, select_click_handler);
+}
+
 static void rounded_layer_update_callback(Layer *me, GContext *ctx) {
   graphics_context_set_fill_color(ctx, GColorWhite);
   graphics_context_set_stroke_color(ctx, GColorBlack);
@@ -64,6 +74,8 @@ static void rounded_layer_update_callback(Layer *me, GContext *ctx) {
 
 static void window_load(Window *window) {
   window_set_background_color(window, GColorBlack);
+  window_set_fullscreen(window, true);
+
   Layer *root_layer = window_get_root_layer(window);
 
   // Create the Time text_layer
@@ -142,13 +154,14 @@ static void window_unload(Window *window) {
 static void init(void) {
   // Create a window
   window = window_create();
+  window_set_click_config_provider(window, click_config_provider);
 
   window_set_window_handlers(window, (WindowHandlers) {
     .load = window_load,
     .unload = window_unload,
   });
 
-  const bool animated = false;
+  const bool animated = true;
   window_stack_push(window, animated);
 }
 
