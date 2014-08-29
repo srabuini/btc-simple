@@ -1,0 +1,17 @@
+{
+  "uuid": "cea47b89-6378-47ca-b9f4-c3bb9de3286e",
+  "shortName": "btc-simple",
+  "longName": "btc-simple",
+  "companyName": "MakeAwesomeHappen",
+  "versionCode": 1,
+  "versionLabel": "1.0.0",
+  "watchapp": {
+    "watchface": false
+  },
+  "appKeys": {
+    "dummy": 0
+  },
+  "resources": {
+    "media": []
+  }
+}
