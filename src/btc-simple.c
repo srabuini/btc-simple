@@ -10,7 +10,7 @@ static AppSync sync;
 static uint8_t sync_buffer[64];
 
 enum BtcKey {
-  BTC_PRICE_KEY = 0x0 // TUPLE_CSTRING
+  BTC_PRICE_KEY = 0x0
 };
 
 static void sync_error_callback(DictionaryResult dict_error,
@@ -57,7 +57,6 @@ static void send_cmd(void) {
 }
 
 static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
-  // refresh
   text_layer_set_text(btc_layer, "Loading...");
   send_cmd();
 }
@@ -73,12 +72,8 @@ static void rounded_layer_update_callback(Layer *me, GContext *ctx) {
 }
 
 static void window_load(Window *window) {
-  window_set_background_color(window, GColorBlack);
-  window_set_fullscreen(window, true);
-
   Layer *root_layer = window_get_root_layer(window);
 
-  // Create the Time text_layer
   time_layer = text_layer_create(GRect(0, 0, 144, 56));
   text_layer_set_text_alignment(time_layer, GTextAlignmentCenter);
   text_layer_set_font(time_layer,
@@ -87,7 +82,6 @@ static void window_load(Window *window) {
   text_layer_set_text_color(time_layer, GColorWhite);
   layer_add_child(root_layer, text_layer_get_layer(time_layer));
 
-  // Create the Date text_layer
   date_layer = text_layer_create(GRect(0, 56, 144, 56));
   text_layer_set_text_alignment(date_layer, GTextAlignmentCenter);
   text_layer_set_font(date_layer,
@@ -96,24 +90,20 @@ static void window_load(Window *window) {
   text_layer_set_text_color(date_layer, GColorWhite);
   layer_add_child(root_layer, text_layer_get_layer(date_layer));
 
-  Layer *window_layer = root_layer;
-  GRect frame = layer_get_frame(window_layer);
+  GRect frame = layer_get_frame(root_layer);
 
   rounded_layer = layer_create(frame);
   layer_set_update_proc(rounded_layer, rounded_layer_update_callback);
-  layer_add_child(window_layer, rounded_layer);
+  layer_add_child(root_layer, rounded_layer);
 
-  // Create the btc text_layer
   btc_layer = text_layer_create(GRect(8, 124, 128, 36));
   text_layer_set_text_alignment(btc_layer, GTextAlignmentCenter);
   text_layer_set_font(btc_layer,
                       fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
   layer_add_child(root_layer, text_layer_get_layer(btc_layer));
 
-  // Subscribe to tick_timer_service
   tick_timer_service_subscribe(MINUTE_UNIT, handle_timechanges);
 
-  // Initialize app_message
   const int inbound_size = 128;
   const int outbound_size = 128;
   app_message_open(inbound_size, outbound_size);
@@ -126,42 +116,32 @@ static void window_load(Window *window) {
                 ARRAY_LENGTH(initial_values),
     sync_tuple_changed_callback, sync_error_callback, NULL);
 
+  window_set_click_config_provider(window, click_config_provider);
+
   send_cmd();
-
-  window_set_background_color(window, GColorBlack);
-
-  // Push the window
-  window_stack_push(window, true);
 }
 
 static void window_unload(Window *window) {
-  // Deinit sync
   app_sync_deinit(&sync);
 
   layer_destroy(rounded_layer);
 
-  // Destroy the text layer
   text_layer_destroy(time_layer);
-
-  // Destroy the btc_layer
   text_layer_destroy(btc_layer);
-
-  // Destroy the date_layer
   text_layer_destroy(date_layer);
 }
 
 static void init(void) {
-  // Create a window
   window = window_create();
-  window_set_click_config_provider(window, click_config_provider);
+  window_set_background_color(window, GColorBlack);
+  window_set_fullscreen(window, true);
 
   window_set_window_handlers(window, (WindowHandlers) {
     .load = window_load,
     .unload = window_unload,
   });
 
-  const bool animated = true;
-  window_stack_push(window, animated);
+  window_stack_push(window, true);
 }
 
 static void deinit(void) {
