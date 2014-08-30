@@ -3,6 +3,7 @@
 static Window *window;
 static TextLayer *time_layer;
 static TextLayer *date_layer;
+static TextLayer *timestamp_layer;
 static TextLayer *btc_layer;
 static Layer *rounded_layer;
 
@@ -10,7 +11,8 @@ static AppSync sync;
 static uint8_t sync_buffer[64];
 
 enum BtcKey {
-  BTC_PRICE_KEY = 0x0
+  BTC_PRICE_KEY = 0x0,
+  BTC_TIMESTAMP_KEY = 0x1
 };
 
 static void sync_error_callback(DictionaryResult dict_error,
@@ -25,6 +27,9 @@ static void sync_tuple_changed_callback(const uint32_t key,
   switch (key) {
     case BTC_PRICE_KEY:
       text_layer_set_text(btc_layer, new_tuple->value->cstring);
+      break;
+    case BTC_TIMESTAMP_KEY:
+      text_layer_set_text(timestamp_layer, new_tuple->value->cstring);
       break;
   }
 }
@@ -41,7 +46,8 @@ static void handle_timechanges(struct tm *tick_time, TimeUnits units_changed) {
 }
 
 static void send_cmd(void) {
-  Tuplet value = TupletCString(BTC_PRICE_KEY, "Loading...");
+  Tuplet price = TupletCString(BTC_PRICE_KEY, "Loading...");
+  Tuplet timestamp = TupletCString(BTC_TIMESTAMP_KEY, "-:-");
 
   DictionaryIterator *iter;
   app_message_outbox_begin(&iter);
@@ -50,7 +56,8 @@ static void send_cmd(void) {
     return;
   }
 
-  dict_write_tuplet(iter, &value);
+  dict_write_tuplet(iter, &price);
+  dict_write_tuplet(iter, &timestamp);
   dict_write_end(iter);
 
   app_message_outbox_send();
@@ -91,8 +98,17 @@ static void create_date_layer(Layer *root_layer) {
   layer_add_child(root_layer, text_layer_get_layer(date_layer));
 }
 
+static void create_timestamp_layer(Layer *root_layer) {
+  timestamp_layer = text_layer_create(GRect(8, 112, 128, 14));
+  text_layer_set_text_alignment(timestamp_layer, GTextAlignmentCenter);
+  text_layer_set_font(timestamp_layer,
+                      fonts_get_system_font(FONT_KEY_GOTHIC_14));
+  layer_add_child(root_layer, text_layer_get_layer(timestamp_layer));
+  text_layer_set_text(timestamp_layer, "-:-");
+}
+
 static void create_btc_layer(Layer *root_layer) {
-  btc_layer = text_layer_create(GRect(8, 124, 128, 36));
+  btc_layer = text_layer_create(GRect(8, 126, 128, 36));
   text_layer_set_text_alignment(btc_layer, GTextAlignmentCenter);
   text_layer_set_font(btc_layer,
                       fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
@@ -116,6 +132,7 @@ static void window_load(Window *window) {
   create_time_layer(root_layer);
   create_date_layer(root_layer);
   create_rounded_layer(root_layer);
+  create_timestamp_layer(root_layer);
   create_btc_layer(root_layer);
 
   tick_timer_service_subscribe(MINUTE_UNIT, handle_timechanges);
@@ -123,7 +140,8 @@ static void window_load(Window *window) {
   app_message_open(inbound_size, outbound_size);
 
   Tuplet initial_values[] = {
-    TupletCString(BTC_PRICE_KEY, "Loading...")
+    TupletCString(BTC_PRICE_KEY, "Loading..."),
+    TupletCString(BTC_TIMESTAMP_KEY, "-:-")
   };
 
   app_sync_init(&sync, sync_buffer, sizeof(sync_buffer), initial_values,
@@ -141,6 +159,7 @@ static void window_unload(Window *window) {
   layer_destroy(rounded_layer);
 
   text_layer_destroy(time_layer);
+  text_layer_destroy(timestamp_layer);
   text_layer_destroy(btc_layer);
   text_layer_destroy(date_layer);
 }

@@ -1,6 +1,7 @@
 {
     "appKeys": {
-        "price": 0
+        "price": 0,
+        "timestamp": 1
     },
     "capabilities": [
         ""

@@ -6,12 +6,21 @@ function fetchData() {
     if (req.readyState == 4) {
       if(req.status == 200) {
         response = JSON.parse(req.responseText);
-        var price;
+        var price, timestamp;
         if (response) {
           price = response.last;
+          timestamp = response.timestamp;
+          var date = new Date(timestamp * 1000);
+          var hours = date.getHours();
+          var minutes = date.getMinutes();
+          minutes = (minutes < 10 ? '0' + minutes : minutes)
+          timestamp = hours + ':' + minutes;
           console.log(price);
+          console.log(timestamp);
           Pebble.sendAppMessage({
-            "price":'$ ' + price});
+            "price":'$ ' + price,
+            "timestamp": timestamp
+          });
         }
       } else {
         console.log("Error");
