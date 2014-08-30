@@ -21,8 +21,8 @@
     },
     "shortName": "Btc Simple",
     "uuid": "cea47b89-6378-47ca-b9f4-c3bb9de3286e",
-    "versionCode": 1,
-    "versionLabel": "1.0",
+    "versionCode": 2,
+    "versionLabel": "1.1",
     "watchapp": {
         "watchface": false
     }
