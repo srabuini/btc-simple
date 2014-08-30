@@ -71,9 +71,7 @@ static void rounded_layer_update_callback(Layer *me, GContext *ctx) {
   graphics_fill_rect(ctx, GRect(0, 112, 144, 56), 6, GCornersAll);
 }
 
-static void window_load(Window *window) {
-  Layer *root_layer = window_get_root_layer(window);
-
+static void create_time_layer(Layer *root_layer) {
   time_layer = text_layer_create(GRect(0, 0, 144, 56));
   text_layer_set_text_alignment(time_layer, GTextAlignmentCenter);
   text_layer_set_font(time_layer,
@@ -81,7 +79,9 @@ static void window_load(Window *window) {
   text_layer_set_background_color(time_layer, GColorBlack);
   text_layer_set_text_color(time_layer, GColorWhite);
   layer_add_child(root_layer, text_layer_get_layer(time_layer));
+}
 
+static void create_date_layer(Layer *root_layer) {
   date_layer = text_layer_create(GRect(0, 56, 144, 56));
   text_layer_set_text_alignment(date_layer, GTextAlignmentCenter);
   text_layer_set_font(date_layer,
@@ -89,23 +89,37 @@ static void window_load(Window *window) {
   text_layer_set_background_color(date_layer, GColorBlack);
   text_layer_set_text_color(date_layer, GColorWhite);
   layer_add_child(root_layer, text_layer_get_layer(date_layer));
+}
 
-  GRect frame = layer_get_frame(root_layer);
-
-  rounded_layer = layer_create(frame);
-  layer_set_update_proc(rounded_layer, rounded_layer_update_callback);
-  layer_add_child(root_layer, rounded_layer);
-
+static void create_btc_layer(Layer *root_layer) {
   btc_layer = text_layer_create(GRect(8, 124, 128, 36));
   text_layer_set_text_alignment(btc_layer, GTextAlignmentCenter);
   text_layer_set_font(btc_layer,
                       fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
   layer_add_child(root_layer, text_layer_get_layer(btc_layer));
+}
+
+static void create_rounded_layer(Layer *root_layer) {
+  GRect frame = layer_get_frame(root_layer);
+
+  rounded_layer = layer_create(frame);
+  layer_set_update_proc(rounded_layer, rounded_layer_update_callback);
+  layer_add_child(root_layer, rounded_layer);
+}
+
+static void window_load(Window *window) {
+  const int inbound_size = 128;
+  const int outbound_size = 128;
+
+  Layer *root_layer = window_get_root_layer(window);
+
+  create_time_layer(root_layer);
+  create_date_layer(root_layer);
+  create_rounded_layer(root_layer);
+  create_btc_layer(root_layer);
 
   tick_timer_service_subscribe(MINUTE_UNIT, handle_timechanges);
 
-  const int inbound_size = 128;
-  const int outbound_size = 128;
   app_message_open(inbound_size, outbound_size);
 
   Tuplet initial_values[] = {
@@ -113,8 +127,8 @@ static void window_load(Window *window) {
   };
 
   app_sync_init(&sync, sync_buffer, sizeof(sync_buffer), initial_values,
-                ARRAY_LENGTH(initial_values),
-    sync_tuple_changed_callback, sync_error_callback, NULL);
+                ARRAY_LENGTH(initial_values), sync_tuple_changed_callback,
+                sync_error_callback, NULL);
 
   window_set_click_config_provider(window, click_config_provider);
 
@@ -145,7 +159,6 @@ static void init(void) {
 }
 
 static void deinit(void) {
-  // Destroy the window
   window_destroy(window);
 }
 
