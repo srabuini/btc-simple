@@ -41,7 +41,7 @@ static void handle_timechanges(struct tm *tick_time, TimeUnits units_changed) {
 }
 
 static void send_cmd(void) {
-  Tuplet value = TupletInteger(1, 1);
+  Tuplet value = TupletCString(BTC_PRICE_KEY, "Loading...");
 
   DictionaryIterator *iter;
   app_message_outbox_begin(&iter);
@@ -123,7 +123,7 @@ static void window_load(Window *window) {
   app_message_open(inbound_size, outbound_size);
 
   Tuplet initial_values[] = {
-    TupletCString(BTC_PRICE_KEY, "$ ---")
+    TupletCString(BTC_PRICE_KEY, "Loading...")
   };
 
   app_sync_init(&sync, sync_buffer, sizeof(sync_buffer), initial_values,
