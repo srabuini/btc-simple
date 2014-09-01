@@ -15,6 +15,24 @@ enum BtcKey {
   BTC_TIMESTAMP_KEY = 0x1
 };
 
+static void send_cmd(void) {
+  Tuplet price = TupletCString(BTC_PRICE_KEY, "Loading...");
+  Tuplet timestamp = TupletCString(BTC_TIMESTAMP_KEY, "-:-");
+
+  DictionaryIterator *iter;
+  app_message_outbox_begin(&iter);
+
+  if (iter == NULL) {
+    return;
+  }
+
+  dict_write_tuplet(iter, &price);
+  dict_write_tuplet(iter, &timestamp);
+  dict_write_end(iter);
+
+  app_message_outbox_send();
+}
+
 static void sync_error_callback(DictionaryResult dict_error,
                                 AppMessageResult app_message_error,
                                 void *context) {
@@ -35,32 +53,20 @@ static void sync_tuple_changed_callback(const uint32_t key,
 }
 
 static void handle_timechanges(struct tm *tick_time, TimeUnits units_changed) {
-  static char time_buffer[10];
+  static char time_buffer[6];
   static char date_buffer[15];
+  int minutes = tick_time->tm_min;
 
   strftime(time_buffer, sizeof(time_buffer), "%k:%M", tick_time);
   strftime(date_buffer, sizeof(date_buffer), "%A %e", tick_time);
 
   text_layer_set_text(time_layer, time_buffer);
   text_layer_set_text(date_layer, date_buffer);
-}
 
-static void send_cmd(void) {
-  Tuplet price = TupletCString(BTC_PRICE_KEY, "Loading...");
-  Tuplet timestamp = TupletCString(BTC_TIMESTAMP_KEY, "-:-");
-
-  DictionaryIterator *iter;
-  app_message_outbox_begin(&iter);
-
-  if (iter == NULL) {
-    return;
+  if(minutes % 5 == 0) {
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "I'm refreshing BTC price");
+    send_cmd();
   }
-
-  dict_write_tuplet(iter, &price);
-  dict_write_tuplet(iter, &timestamp);
-  dict_write_end(iter);
-
-  app_message_outbox_send();
 }
 
 static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
