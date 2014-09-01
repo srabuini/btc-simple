@@ -18,7 +18,7 @@ function fetchData() {
           console.log(price);
           console.log(timestamp);
           Pebble.sendAppMessage({
-            "price":'$ ' + price,
+            "price":'$' + price,
             "timestamp": timestamp
           });
         }
