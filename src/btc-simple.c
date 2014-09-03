@@ -81,7 +81,7 @@ static void click_config_provider(void *context) {
 static void rounded_layer_update_callback(Layer *me, GContext *ctx) {
   graphics_context_set_fill_color(ctx, GColorWhite);
   graphics_context_set_stroke_color(ctx, GColorBlack);
-  graphics_fill_rect(ctx, GRect(0, 112, 144, 56), 6, GCornersAll);
+  graphics_fill_rect(ctx, GRect(6, 112, 132, 50), 10, GCornersAll);
 }
 
 static void create_time_layer(Layer *root_layer) {
@@ -105,7 +105,7 @@ static void create_date_layer(Layer *root_layer) {
 }
 
 static void create_timestamp_layer(Layer *root_layer) {
-  timestamp_layer = text_layer_create(GRect(8, 112, 128, 14));
+  timestamp_layer = text_layer_create(GRect(10, 113, 124, 14));
   text_layer_set_text_alignment(timestamp_layer, GTextAlignmentCenter);
   text_layer_set_font(timestamp_layer,
                       fonts_get_system_font(FONT_KEY_GOTHIC_14));
@@ -114,7 +114,7 @@ static void create_timestamp_layer(Layer *root_layer) {
 }
 
 static void create_btc_layer(Layer *root_layer) {
-  btc_layer = text_layer_create(GRect(8, 126, 128, 36));
+  btc_layer = text_layer_create(GRect(10, 128, 124, 33));
   text_layer_set_text_alignment(btc_layer, GTextAlignmentCenter);
   text_layer_set_font(btc_layer,
                       fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
