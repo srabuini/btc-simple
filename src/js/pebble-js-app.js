@@ -53,6 +53,15 @@ function Bitstamp(){
   };
 }
 
+function Bitfinex() {
+  this.url = "https://api.bitfinex.com/v1/pubticker/btcusd";
+  this.name = "Bitfinex";
+  
+  this.data = function(response) {
+    return {price: response.last_price, timestamp: response.timestamp};
+  };
+}
+
 Pebble.addEventListener("ready",
                         function(e) {
                           console.log("connect! " + e.ready);
