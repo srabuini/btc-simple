@@ -7,7 +7,7 @@
         "configurable"
     ],
     "companyName": "WasabitLabs",
-    "longName": "Bitstamp BTC Price",
+    "longName": "BTC Price from different providers",
     "projectType": "native",
     "resources": {
         "media": [
@@ -22,7 +22,7 @@
     "shortName": "Btc Simple",
     "uuid": "cea47b89-6378-47ca-b9f4-c3bb9de3286e",
     "versionCode": 3,
-    "versionLabel": "1.2",
+    "versionLabel": "1.3",
     "watchapp": {
         "watchface": false
     }
