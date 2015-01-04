@@ -1,4 +1,4 @@
-btc-simple
+BTC Simple
 ==========
 
 A simple Pebble app to know your local time & date and Bitstamp BTC last price.
