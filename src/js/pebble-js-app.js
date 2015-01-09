@@ -69,6 +69,22 @@ function Bitfinex() {
   };
 }
 
+function OKCoin() {
+  this.url = "https://www.okcoin.com/api/v1/ticker.do?symbol=btc_usd";
+  this.name = "OkCoin";
+  this.data = function(response) {
+    return {price: response.ticker.last, timestamp: response.date};
+  };
+}
+
+function BitcoinAverage() {
+  this.url = "https://api.bitcoinaverage.com/ticker/USD/";
+  this.name = 'BitcoinAverage';
+  this.data = function(response) {
+    return {price: response.last, timestamp: Date.parse(response.timestamp)};
+  };
+}
+
 function getConfiguration() {
   var configuration = localStorage.getItem("configuration");
   if (configuration) {
@@ -102,8 +118,14 @@ function getProvider() {
     case "coindesk":
       objProvider = new Coindesk();
       break;
+    case 'bitcoinaverage':
+      objProvider = new BitcoinAverage();
+      break;
     case "bitfinex":
       objProvider = new Bitfinex();
+      break;
+    case "okcoin":
+      objProvider = new OKCoin();
       break;
     default:
       objProvider = new Bitstamp();
