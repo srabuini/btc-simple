@@ -85,6 +85,14 @@ function BitcoinAverage() {
   };
 }
 
+function Xapo() {
+  this.url = 'https://xapi.xapo.com/last';
+  this.name = 'Xapo';
+  this.data = function(response) {
+    return {price: parseInt(response.buy * 100) / 100, timestamp: Date.now() / 1000};
+  };
+}
+
 function getConfiguration() {
   var configuration = localStorage.getItem("configuration");
   if (configuration) {
@@ -126,6 +134,9 @@ function getProvider() {
       break;
     case "okcoin":
       objProvider = new OKCoin();
+      break;
+    case "xapo":
+      objProvider = new Xapo();
       break;
     default:
       objProvider = new Bitstamp();

@@ -19,10 +19,11 @@
             }
         ]
     },
+    "sdkVersion": "2",
     "shortName": "Btc Simple",
     "uuid": "cea47b89-6378-47ca-b9f4-c3bb9de3286e",
-    "versionCode": 3,
-    "versionLabel": "1.5",
+    "versionCode": 1,
+    "versionLabel": "1.6",
     "watchapp": {
         "watchface": false
     }
