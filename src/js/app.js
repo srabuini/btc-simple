@@ -6,7 +6,7 @@ function fetchData() {
 
   var provider = getProvider();
   console.log(provider.url);
-  req.open('GET', provider.url);
+  req.open("GET", provider.url);
 
   req.onload = function(e) {
     if (req.readyState == 4) {
@@ -20,13 +20,13 @@ function fetchData() {
           var date = new Date(timestamp * 1000);
           var hours = date.getHours();
           var minutes = date.getMinutes();
-          minutes = (minutes < 10 ? '0' + minutes : minutes);
-          timestamp = hours + ':' + minutes;
+          minutes = (minutes < 10 ? "0" + minutes : minutes);
+          timestamp = hours + ":" + minutes;
           console.log(price);
           console.log(timestamp);
           Pebble.sendAppMessage({
-            "price":'$' + price,
-            "timestamp": provider.name + ':' + timestamp
+            "price":"$" + price,
+            "timestamp": provider.name + ":" + timestamp
           });
         }
       } else {
@@ -79,15 +79,15 @@ function OKCoin() {
 
 function BitcoinAverage() {
   this.url = "https://api.bitcoinaverage.com/ticker/USD/";
-  this.name = 'BitcoinAverage';
+  this.name = "BitcoinAverage";
   this.data = function(response) {
     return {price: response.last, timestamp: Date.parse(response.timestamp)};
   };
 }
 
 function Xapo() {
-  this.url = 'https://xapi.xapo.com/last';
-  this.name = 'Xapo';
+  this.url = "https://xapi.xapo.com/last";
+  this.name = "Xapo";
   this.data = function(response) {
     return {price: parseInt(response.buy * 100) / 100, timestamp: Date.now() / 1000};
   };
@@ -126,7 +126,7 @@ function getProvider() {
     case "coindesk":
       objProvider = new Coindesk();
       break;
-    case 'bitcoinaverage':
+    case "bitcoinaverage":
       objProvider = new BitcoinAverage();
       break;
     case "bitfinex":
@@ -148,14 +148,10 @@ function getProvider() {
 Pebble.addEventListener("ready", function(e) {
   console.log("connect! " + e.ready);
   fetchData();
-  console.log(e.type);
 });
 
 Pebble.addEventListener("appmessage", function(e) {
   fetchData();
-  console.log(e.type);
-  console.log(e.payload);
-  console.log("message!");
 });
 
 Pebble.addEventListener("showConfiguration", function(e) {
