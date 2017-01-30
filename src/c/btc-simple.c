@@ -57,7 +57,8 @@ static void handle_timechanges(struct tm *tick_time, TimeUnits units_changed) {
   static char date_buffer[15];
   int minutes = tick_time->tm_min;
 
-  strftime(time_buffer, sizeof(time_buffer), "%k:%M", tick_time);
+  clock_copy_time_string(time_buffer, sizeof(time_buffer));
+  
   strftime(date_buffer, sizeof(date_buffer), "%A %e", tick_time);
 
   text_layer_set_text(time_layer, time_buffer);
